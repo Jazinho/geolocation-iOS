@@ -14,6 +14,7 @@
 		AC20D9111F9F10EF00DFB949 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC20D90F1F9F10EF00DFB949 /* LaunchScreen.storyboard */; };
 		AC20D91C1F9F10EF00DFB949 /* GeolocationAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC20D91B1F9F10EF00DFB949 /* GeolocationAppTests.swift */; };
 		AC20D9271F9F10EF00DFB949 /* GeolocationAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC20D9261F9F10EF00DFB949 /* GeolocationAppUITests.swift */; };
+		AC20D9361F9F110F00DFB949 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC20D9351F9F110F00DFB949 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		AC20D9221F9F10EF00DFB949 /* GeolocationAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GeolocationAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC20D9261F9F10EF00DFB949 /* GeolocationAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeolocationAppUITests.swift; sourceTree = "<group>"; };
 		AC20D9281F9F10EF00DFB949 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC20D9351F9F110F00DFB949 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC20D9361F9F110F00DFB949 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +84,7 @@
 				AC20D91A1F9F10EF00DFB949 /* GeolocationAppTests */,
 				AC20D9251F9F10EF00DFB949 /* GeolocationAppUITests */,
 				AC20D9041F9F10EF00DFB949 /* Products */,
+				AC20D9341F9F110F00DFB949 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -123,6 +127,14 @@
 				AC20D9281F9F10EF00DFB949 /* Info.plist */,
 			);
 			path = GeolocationAppUITests;
+			sourceTree = "<group>";
+		};
+		AC20D9341F9F110F00DFB949 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AC20D9351F9F110F00DFB949 /* MapKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,6 +206,11 @@
 					AC20D9021F9F10EE00DFB949 = {
 						CreatedOnToolsVersion = 8.1;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					AC20D9161F9F10EF00DFB949 = {
 						CreatedOnToolsVersion = 8.1;
