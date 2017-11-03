@@ -12,9 +12,11 @@ import CoreLocation
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
+    @IBOutlet weak var addressField: UITextField!
     @IBOutlet weak var mapView: MKMapView!
     var curLocationManager: CLLocationManager?
     var currentPin: MKPointAnnotation = MKPointAnnotation()
+    var myGeocoder: CLGeocoder = CLGeocoder()
     
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
@@ -23,7 +25,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        mapView.delegate = self
+        if(CLLocationManager.locationServicesEnabled()){
+            curLocationManager = CLLocationManager()
+            curLocationManager!.delegate = self
+            curLocationManager!.requestWhenInUseAuthorization()
+        }
+        //mapView.delegate = self
         
         clearButton.isEnabled = false
         stopButton.isEnabled = false
@@ -40,7 +47,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        mapView.setCenter(locations[0].coordinate, animated: true)
+        let delta = locations[0].speed / 1000
+        myGeocoder.reverseGeocodeLocation(locations[0], completionHandler: {(placemarks, error) -> Void in
+            var address = ""
+            if let country = placemarks![0].country {
+                address = String(describing: country)
+            }
+            if let city = placemarks![0].locality {
+                address = String(describing: "\(city), \(address)")
+            }
+            if let place = placemarks![0].name {
+                address = String(describing: "\(place), \(address)")
+            }
+            self.addressField.text = address
+                
+            })
+
+        let span = MKCoordinateSpan(latitudeDelta: delta, longitudeDelta: delta)
+        let region = MKCoordinateRegion(center: locations[0].coordinate, span: span)
+        mapView.setRegion(region, animated: true)
         let annotation = MKPointAnnotation()
         annotation.coordinate = locations[0].coordinate
         mapView.addAnnotation(annotation)
@@ -55,17 +80,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         curLocationManager!.stopUpdatingLocation()
         clearButton.isEnabled = false
         stopButton.isEnabled = false
-        
+        startButton.isEnabled = true
     }
     
     @IBAction func startLocating(_ sender: UIButton) {
-        if(CLLocationManager.locationServicesEnabled()){
-            curLocationManager = CLLocationManager()
-            curLocationManager!.delegate = self
-            curLocationManager!.requestWhenInUseAuthorization()
-            curLocationManager!.startUpdatingLocation()
-        }
-        
+        curLocationManager!.startUpdatingLocation()
         stopButton.isEnabled = true
         clearButton.isEnabled = true
         startButton.isEnabled = false
