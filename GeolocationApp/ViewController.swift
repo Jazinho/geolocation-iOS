@@ -11,13 +11,11 @@ import MapKit
 import CoreLocation
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
-
     @IBOutlet weak var addressField: UITextField!
     @IBOutlet weak var mapView: MKMapView!
     var curLocationManager: CLLocationManager?
     var currentPin: MKPointAnnotation = MKPointAnnotation()
     var myGeocoder: CLGeocoder = CLGeocoder()
-    
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
@@ -30,9 +28,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             curLocationManager!.delegate = self
             curLocationManager!.requestWhenInUseAuthorization()
         }
-        //mapView.delegate = self
-        
-        clearButton.isEnabled = false
+        mapView.delegate = self
         stopButton.isEnabled = false
     }
 
@@ -44,7 +40,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         print(mapView.region)
     }
-    
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let delta = locations[0].speed / 1000
@@ -60,8 +55,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 address = String(describing: "\(place), \(address)")
             }
             self.addressField.text = address
-                
-            })
+        })
 
         let span = MKCoordinateSpan(latitudeDelta: delta, longitudeDelta: delta)
         let region = MKCoordinateRegion(center: locations[0].coordinate, span: span)
@@ -78,7 +72,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     @IBAction func stopLocating(_ sender: UIButton) {
         curLocationManager!.stopUpdatingLocation()
-        clearButton.isEnabled = false
         stopButton.isEnabled = false
         startButton.isEnabled = true
     }
@@ -86,7 +79,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBAction func startLocating(_ sender: UIButton) {
         curLocationManager!.startUpdatingLocation()
         stopButton.isEnabled = true
-        clearButton.isEnabled = true
         startButton.isEnabled = false
     }
     
