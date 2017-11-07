@@ -22,28 +22,25 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        mapView.delegate = self
         if(CLLocationManager.locationServicesEnabled()){
             curLocationManager = CLLocationManager()
             curLocationManager!.delegate = self
             curLocationManager!.requestWhenInUseAuthorization()
         }
-        mapView.delegate = self
         stopButton.isEnabled = false
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        print(mapView.region)
-    }
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {}
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let delta = locations[0].speed / 1000
-        myGeocoder.reverseGeocodeLocation(locations[0], completionHandler: {(placemarks, error) -> Void in
+        var delta = locations[0].speed / 1000
+        if let curLocation = locations.last {
+            myGeocoder.reverseGeocodeLocation(curLocation, completionHandler: {(placemarks, error) -> Void in
             var address = ""
             if let country = placemarks![0].country {
                 address = String(describing: country)
@@ -55,14 +52,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 address = String(describing: "\(place), \(address)")
             }
             self.addressField.text = address
-        })
+            })
+            if delta < 0 {
+                delta = delta * (-1)
+            }
 
-        let span = MKCoordinateSpan(latitudeDelta: delta, longitudeDelta: delta)
-        let region = MKCoordinateRegion(center: locations[0].coordinate, span: span)
-        mapView.setRegion(region, animated: true)
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = locations[0].coordinate
-        mapView.addAnnotation(annotation)
+            let span = MKCoordinateSpan(latitudeDelta: delta, longitudeDelta: delta)
+            let region = MKCoordinateRegion(center: curLocation.coordinate, span: span)
+            mapView.setRegion(region, animated: true)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = curLocation.coordinate
+            mapView.addAnnotation(annotation)
+        }
     }
 
     @IBAction func clearAllFromMapPins(_ sender: UIButton) {
